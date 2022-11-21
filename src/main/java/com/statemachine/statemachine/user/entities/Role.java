@@ -1,13 +1,9 @@
-package co.develhope.loginDemo.user.entities;
-
-import lombok.Data;
+package com.statemachine.statemachine.user.entities;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
-@Table
-@Data
+@Table(name = "roles")
 public class Role {
 
     @Id
@@ -18,12 +14,36 @@ public class Role {
 
     private String description;
 
-    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USER_ROLES",
-            inverseJoinColumns = {
-                    @JoinColumn(name = "USER_ID")
-            },
-            joinColumns = {
-                    @JoinColumn(name = "ROLE_ID") })
-    private Set<User> user;*/
+    public Role(Long id, String name, String description) {
+        Id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Role() {
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

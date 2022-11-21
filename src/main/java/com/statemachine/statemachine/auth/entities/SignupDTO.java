@@ -1,17 +1,50 @@
-package co.develhope.loginDemo.auth.entities;
+package com.statemachine.statemachine.auth.entities;
 
-import lombok.Data;
 
-@Data
 public class SignupDTO {
 
-    /** User name */
     private String name;
-    /** User surname */
     private String surname;
 
-    /** User email */
     private String email;
-    /** User password clear */
     private String password;
+
+    public SignupDTO(String name, String surname, String email, String password) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

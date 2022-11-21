@@ -1,10 +1,10 @@
-package co.develhope.loginDemo.auth.services;
+package com.statemachine.statemachine.auth.services;
 
-import co.develhope.loginDemo.auth.entities.RequestPasswordDTO;
-import co.develhope.loginDemo.auth.entities.RestorePasswordDTO;
-import co.develhope.loginDemo.notification.services.MailNotificationService;
-import co.develhope.loginDemo.user.entities.User;
-import co.develhope.loginDemo.user.repositories.UserRepository;
+import com.statemachine.statemachine.auth.entities.RequestPasswordDTO;
+import com.statemachine.statemachine.auth.entities.RestorePasswordDTO;
+import com.statemachine.statemachine.notification.services.MailNotificationService;
+import com.statemachine.statemachine.user.entities.User;
+import com.statemachine.statemachine.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

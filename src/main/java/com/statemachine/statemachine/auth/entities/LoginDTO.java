@@ -1,12 +1,33 @@
-package co.develhope.loginDemo.auth.entities;
+package com.statemachine.statemachine.auth.entities;
 
-import lombok.Data;
-
-@Data
 public class LoginDTO {
 
-    /** This is the user email */
     private String email;
-    /** This is the password CLEAR */
     private String password;
+
+    public LoginDTO(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public LoginDTO() {
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

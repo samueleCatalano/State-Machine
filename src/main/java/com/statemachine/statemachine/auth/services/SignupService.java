@@ -1,13 +1,13 @@
-package co.develhope.loginDemo.auth.services;
+package com.statemachine.statemachine.auth.services;
 
-import co.develhope.loginDemo.auth.entities.SignupActivationDTO;
-import co.develhope.loginDemo.auth.entities.SignupDTO;
-import co.develhope.loginDemo.notification.services.MailNotificationService;
-import co.develhope.loginDemo.user.entities.Role;
-import co.develhope.loginDemo.user.entities.User;
-import co.develhope.loginDemo.user.repositories.RoleRepository;
-import co.develhope.loginDemo.user.repositories.UserRepository;
-import co.develhope.loginDemo.user.utils.Roles;
+import com.statemachine.statemachine.auth.entities.SignupActivationDTO;
+import com.statemachine.statemachine.auth.entities.SignupDTO;
+import com.statemachine.statemachine.notification.services.MailNotificationService;
+import com.statemachine.statemachine.user.entities.Role;
+import com.statemachine.statemachine.user.entities.User;
+import com.statemachine.statemachine.user.repositories.RoleRepository;
+import com.statemachine.statemachine.user.repositories.UserRepository;
+import com.statemachine.statemachine.user.utils.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,12 @@ public class SignupService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     public User signup(SignupDTO signupDTO) throws Exception {
+        return this.signup(signupDTO, Roles.REGISTERED);
+    }
+
+    public User signup(SignupDTO signupDTO, String role) throws Exception {
         User userInDB = userRepository.findByEmail(signupDTO.getEmail());
         if(userInDB != null) throw new Exception("User already Exists");
         User user = new User();
@@ -41,10 +46,9 @@ public class SignupService {
         user.setSurname(signupDTO.getSurname());
         user.setPassword(passwordEncoder.encode(signupDTO.getPassword()));
         user.setActivationCode(UUID.randomUUID().toString());
-
         Set<Role> roles = new HashSet<>();
-        Optional<Role> userRole = roleRepository.findByName(Roles.REGISTERED);
-        if(!userRole.isPresent()) throw  new Exception("Cannot set role");
+        Optional<Role> userRole = roleRepository.findByName(role.toUpperCase());
+        if(!userRole.isPresent()) throw new Exception("Cannot set role");
         roles.add(userRole.get());
         user.setRoles(roles);
 

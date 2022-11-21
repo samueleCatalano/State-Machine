@@ -1,6 +1,6 @@
-package co.develhope.loginDemo.notification.services;
+package com.statemachine.statemachine.notification.services;
 
-import co.develhope.loginDemo.user.entities.User;
+import com.statemachine.statemachine.user.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

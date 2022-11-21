@@ -1,8 +1,8 @@
-package co.develhope.loginDemo.auth.controller;
+package com.statemachine.statemachine.auth.controller;
 
-import co.develhope.loginDemo.auth.entities.LoginDTO;
-import co.develhope.loginDemo.auth.entities.LoginRTO;
-import co.develhope.loginDemo.auth.services.LoginService;
+import com.statemachine.statemachine.auth.entities.LoginDTO;
+import com.statemachine.statemachine.auth.entities.LoginRTO;
+import com.statemachine.statemachine.auth.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

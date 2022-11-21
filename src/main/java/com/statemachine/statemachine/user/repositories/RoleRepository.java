@@ -1,6 +1,6 @@
-package co.develhope.loginDemo.user.repositories;
+package com.statemachine.statemachine.user.repositories;
 
-import co.develhope.loginDemo.user.entities.Role;
+import com.statemachine.statemachine.user.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

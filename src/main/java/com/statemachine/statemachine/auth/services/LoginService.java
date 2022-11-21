@@ -1,12 +1,11 @@
-package co.develhope.loginDemo.auth.services;
+package com.statemachine.statemachine.auth.services;
 
-import co.develhope.loginDemo.auth.entities.LoginDTO;
-import co.develhope.loginDemo.auth.entities.LoginRTO;
-import co.develhope.loginDemo.user.entities.Role;
-import co.develhope.loginDemo.user.entities.User;
-import co.develhope.loginDemo.user.repositories.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.statemachine.statemachine.auth.entities.LoginDTO;
+import com.statemachine.statemachine.auth.entities.LoginRTO;
+import com.statemachine.statemachine.user.entities.User;
+import com.statemachine.statemachine.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,6 @@ public class LoginService {
 
     public static String getJWT(User user){
         Date expiresAt = convertToDateViaInstant(LocalDateTime.now().plusDays(15));
-        //https://mkyong.com/java8/java-8-how-to-convert-a-stream-to-array/
         String[] roles = user.getRoles().stream().map(role -> role.getName()).toArray(String[]::new);
         return JWT.create()
                 .withIssuer("develhope-demo")

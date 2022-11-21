@@ -1,8 +1,8 @@
-package co.develhope.loginDemo.auth.controller;
+package com.statemachine.statemachine.auth.controller;
 
-import co.develhope.loginDemo.auth.entities.RequestPasswordDTO;
-import co.develhope.loginDemo.auth.entities.RestorePasswordDTO;
-import co.develhope.loginDemo.auth.services.PasswordService;
+import com.statemachine.statemachine.auth.entities.RequestPasswordDTO;
+import com.statemachine.statemachine.auth.entities.RestorePasswordDTO;
+import com.statemachine.statemachine.auth.services.PasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

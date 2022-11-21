@@ -1,70 +1,62 @@
-package co.develhope.loginDemo.order.controllers;
+package com.statemachine.statemachine.order.controllers;
 
-import co.develhope.loginDemo.order.entities.Order;
-import co.develhope.loginDemo.order.repositories.OrdersRepository;
-import co.develhope.loginDemo.order.services.OrderService;
-import co.develhope.loginDemo.user.entities.User;
-import co.develhope.loginDemo.user.utils.Roles;
+import com.statemachine.statemachine.order.entities.Order;
+import com.statemachine.statemachine.order.entities.OrderDTO;
+import com.statemachine.statemachine.order.services.OrderService;
+import com.statemachine.statemachine.user.entities.User;
+import com.statemachine.statemachine.user.utils.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
-@PreAuthorize("hasRole('"+ Roles.REGISTERED +"') OR hasRole('"+Roles.ADMIN+"')" )
 public class OrderController {
-
-    @Autowired
-    private OrdersRepository ordersRepository;
 
     @Autowired
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody Order order){
-        return ResponseEntity.ok(orderService.save(order));
+    @PreAuthorize("hasRole('ROLE_REGISTERED')")
+    public Order create(@RequestBody OrderDTO order) throws Exception{
+        return orderService.save(order);
     }
 
     @GetMapping("/{id}")
-    @PostAuthorize("hasRole('"+ Roles.ADMIN +"') OR returnObject.body == null OR returnObject.body.createdBy.id == authentication.principal.id")
-    public ResponseEntity<Order> getSingle(@PathVariable Long id){
-        Optional<Order> order = ordersRepository.findById(id);
+    @PostAuthorize("hasRole('"+ Roles.RESTAURANT +"') OR returnObject.body == null OR returnObject.body.createdBy.id == authentication.principal.id")
+    public ResponseEntity<Order> getSingle(@PathVariable Long id, Principal principal){
+        Optional<Order> order = orderService.findById(id);
         if(!order.isPresent()) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(order.get());
+        User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        if(Roles.hasRole(user,Roles.REGISTERED) && order.get().getCreatedBy().getId() == user.getId()){
+            return ResponseEntity.ok(order.get());
+        }else if(Roles.hasRole(user,Roles.RESTAURANT) && order.get().getRestaurant().getId() == user.getId()) {
+            return ResponseEntity.ok(order.get());
+        }else if(Roles.hasRole(user,Roles.RIDER) && order.get().getRider().getId() == user.getId()) {
+            return ResponseEntity.ok(order.get());
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAll(){
+    public ResponseEntity<Object> getAll(){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean isAdmin =  user.getRoles().stream().filter(role -> role.getName().equals(Roles.ADMIN)).findAny().isPresent();
-        if(isAdmin){
-            return ResponseEntity.ok(ordersRepository.findAll());
-        }else {
-            return ResponseEntity.ok(ordersRepository.findByCreatedBy(user));
+        if(Roles.hasRole(user, Roles.REGISTERED)){
+            return ResponseEntity.ok(orderService.findByCreatedBy(user));
+        }else if(Roles.hasRole(user, Roles.RESTAURANT)){
+            return ResponseEntity.ok(orderService.findByRestaurant(user));
+        } else if (Roles.hasRole(user, Roles.RIDER)) {
+            return ResponseEntity.ok(orderService.findByRider(user));
         }
+        return null;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Order> update(@RequestBody Order order, @PathVariable Long id){
-        if(!orderService.canEdit(id)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.ok(orderService.update(id, order));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable Long id){
-        if(!orderService.canEdit(id)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        ordersRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
 }

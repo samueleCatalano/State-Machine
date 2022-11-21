@@ -1,13 +1,13 @@
-package co.develhope.loginDemo;
+package com.statemachine.statemachine;
 
-import co.develhope.loginDemo.auth.services.LoginService;
-import co.develhope.loginDemo.user.entities.User;
-import co.develhope.loginDemo.user.repositories.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.statemachine.statemachine.auth.services.LoginService;
+import com.statemachine.statemachine.user.entities.User;
+import com.statemachine.statemachine.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +23,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +35,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private Collection<? extends GrantedAuthority> getAuthorities(User user){
         if(user == null || !user.isActive()) return List.of();
-        return Arrays.asList(user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName())).toArray(SimpleGrantedAuthority[]::new)); //8+
-        //user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName())).toList() // 16+;
+      return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName())).toList(); // 16+;
     }
 
 
@@ -71,7 +69,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get user identity and set it on the spring security context
         Optional<User> userDetails = userRepo.findById(decoded.getClaim("id").asLong());
         if (!userDetails.isPresent() || !userDetails.get().isActive()) {
             chain.doFilter(request, response);
